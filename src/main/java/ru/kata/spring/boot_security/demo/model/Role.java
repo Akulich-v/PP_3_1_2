@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.model;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -15,8 +16,6 @@ public class Role {
 
     public Role() {
     }
-
-
 
     public Role(Long id, String name) {
         this.id = id;
@@ -35,6 +34,9 @@ public class Role {
     public void setName(String name) {
         this.name = name;
     }
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 
     @Override
     public boolean equals(Object o) {

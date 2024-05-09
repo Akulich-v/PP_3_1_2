@@ -1,19 +1,21 @@
 package ru.kata.spring.boot_security.demo.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 import ru.kata.spring.boot_security.demo.repositories.UsersRepository;
-import ru.kata.spring.boot_security.demo.security.Authority;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 @Component
-public class DbInit {
+public class DbInit implements CommandLineRunner {
 
     private final UsersRepository usersRepository;
     private final RoleRepository roleRepository;
@@ -30,8 +32,9 @@ public class DbInit {
         this.webSecurityConfig = webSecurityConfig;
     }
 
-    @PostConstruct
-    public void postConstruct() {
+    @Override
+    public void run(String... args) throws Exception {
+
 
         Role adminRole = roleRepository.findByName("ROLE_ADMIN");
         if (adminRole == null) {
@@ -46,34 +49,24 @@ public class DbInit {
             userRole.setName("ROLE_USER");
             roleRepository.save(userRole);
         }
-        adminRole = roleRepository.findById(1L).orElse(null);
-        userRole = roleRepository.findById(2L).orElse(null);
+        adminRole = roleRepository.findByName("ROLE_ADMIN");
+        userRole = roleRepository.findByName("ROLE_USER");
 
         tempAdmin = new User("tempAdmin"
                 , webSecurityConfig.getPasswordEncoder().encode("admin_password")
                 , "FirstNameTempAdmin"
                 , "LastNameTempAdmin"
-                , "E-mailTempAdmin@email.ru");
-        tempAdmin.setRoles(Collections.singleton(adminRole));
+                , "E-mailTempAdmin@email.ru"
+        ,Set.of(adminRole, userRole));
 
         tempUser = new User("tempUser"
                 , webSecurityConfig.getPasswordEncoder().encode("user_password")
                 , "FirstNameTempUser"
                 , "LastNameTempUser"
-                , "E-mailTempUser@email.ru");
-        tempUser.setRoles(Collections.singleton(userRole));
+                , "E-mailTempUser@email.ru"
+        , Set.of(userRole));
 
         usersRepository.save(tempAdmin);
         usersRepository.save(tempUser);
-    }
-
-    @PreDestroy
-    private void preDestroy() {
-        if (usersRepository.existsById(tempAdmin.getId())) {
-            usersRepository.delete(tempAdmin);
-        }
-        if (usersRepository.existsById(tempUser.getId())) {
-            usersRepository.delete(tempUser);
-        }
     }
 }
