@@ -23,6 +23,13 @@
     <label for="email">E-mail: </label>
     <input type="text" th:field="*{email}" id="email">
     <br/>
+    <br/>
+    <div th:each="role : ${allRoles}">
+        <input type="checkbox" th:id="'role-' + ${role.id}" th:value="${role.id}" th:name="roles" />
+        <label th:for="'role-' + ${role.id}" th:text="${role.name}"></label>
+        <br/>
+    </div>
+    <br/>
     <input type="submit" value="Edit!"/>
     <br/>
     <a href="/logout">Выйти из пользователя</a>

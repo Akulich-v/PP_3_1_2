@@ -23,6 +23,14 @@
     <label for="E-mail">E-mail: </label>
     <input type="text" th:field="*{email}" id="E-mail">
     <br/>
+    <label for="Roles">Roles: </label>
+    <br/>
+    <div th:each="role : ${allRoles}">
+        <input type="checkbox" th:id="'role-' + ${role.id}" th:value="${role.id}" name="roles" />
+        <label th:for="'role-' + ${role.id}" th:text="${#strings.replace(role.name, 'ROLE_', '')}"></label>
+        <br/>
+    </div>
+    <br/>
     <input type="submit" value="Create!"/>
     <br/>
     <a href="/logout">Выйти из пользователя</a>

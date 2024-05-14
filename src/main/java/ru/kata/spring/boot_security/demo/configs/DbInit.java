@@ -52,8 +52,8 @@ public class DbInit implements CommandLineRunner {
         adminRole = roleRepository.findByName("ROLE_ADMIN");
         userRole = roleRepository.findByName("ROLE_USER");
 
-        tempAdmin = new User("tempAdmin"
-                , webSecurityConfig.getPasswordEncoder().encode("admin_password")
+        tempAdmin = new User("Admin"
+                , webSecurityConfig.getPasswordEncoder().encode("111")
                 , "FirstNameTempAdmin"
                 , "LastNameTempAdmin"
                 , "E-mailTempAdmin@email.ru"
